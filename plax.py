@@ -9,7 +9,7 @@ genai.configure(
 model = genai.GenerativeModel('gemini-pro')
 chat = model.start_chat(history=[])
 
-first_config = "Gemini, te llamare plax, y si por ejemplo te pregunto como te llamas me dices plax"
+first_config = "Gemini, si te preguntan como te llamas por favor di Plax, y si te saludan con, por ejemplo, Hola plax, necesito que reconozcas ese nombre"
 
 chat.send_message(first_config)
 
@@ -18,6 +18,8 @@ while(True):
 
     if(question.strip() == 'exit'):
         break
+
+#    elif(question.strip())
 
     response = chat.send_message(question)
     print('\n')
