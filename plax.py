@@ -1,7 +1,6 @@
 import google.generativeai as genai
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
-from pprint import pprint
 from time import sleep
 from dotenv import load_dotenv
 import os
@@ -20,12 +19,32 @@ start_volume = 100
 model = genai.GenerativeModel('gemini-pro')
 chat = model.start_chat(history=[])
 
-first_config = "Gemini, si te preguntan como te llamas por favor di Plax, y si te saludan con, por ejemplo, Hola plax, necesito que reconozcas ese nombre."
+first_config = 'Gemini, si te preguntan como te llamas por favor di Plax, y si te saludan con, por ejemplo, Hola plax, necesito que reconozcas ese nombre. Si te pregunto sobre si algo es canción o artista solo responde "Canción" o "Artista"'
 sp.volume(start_volume)
 
 chat.send_message(first_config)
 
-def search():
+def artist_or_song():
+    entry = question.strip()
+    aos = f"{entry} es canción o artista"
+    query = chat.send_message(aos)
+    if query.text == "Artista":
+        search_artist()
+    elif query.text == "Canción":
+        search_song()
+    else:
+        print("didn't found")
+
+def search_artist():
+    text = question.strip()
+    word = "pon "
+    position= text.find(word)
+    query = text[position + len(word):]
+
+    artist_id = sp.search(q=query, type="artist")["artists"]["items"][0]["id"]
+    sp.start_playback(context_uri=f"spotify:artist:{artist_id}")
+
+def search_song():
     text = question.strip()
     word = "pon "
     position= text.find(word)
@@ -76,6 +95,6 @@ while True:
     elif question.strip() == 'anterior':
         sp.previous_track()
     elif 'pon ' in question.strip():
-        search()
+        artist_or_song()
     else:
         chatbot()
