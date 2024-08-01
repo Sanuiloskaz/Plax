@@ -11,6 +11,7 @@ functions_dictionary = {
     'Spotify_Reproduce': sc.Function_Spotify_Reproduce,
     'Spotify_Volume_Down': sc.Function_Spotify_Volume_Down,
     'Spotify_Volume_Up': sc.Function_Spotify_Volume_Up,
+    'Spotify_Volume_All': sc.Function_Spotify_Volume_All,
     'Spotify_Mute': sc.Function_Spotify_Mute,
     'Spotify_Unmute': sc.Function_Spotify_Unmute,
     'Spotify_Next_Song': sc.Function_Spotify_Next_Song,
