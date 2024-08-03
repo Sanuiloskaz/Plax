@@ -3,8 +3,7 @@ from time import sleep
 from dotenv import load_dotenv
 import os
 import spotify_controls as sc
-
-
+import re
 
 functions_dictionary = {
     'Spotify_Pause': sc.Function_Spotify_Pause,
@@ -88,24 +87,51 @@ chat.send_message(first_config)
  #   sp.start_playback(context_uri=playlist)
 
 def functions():
-    intro = response.text.replace("¤", "")
-    run_function = functions_dictionary.get(intro)
+    intro = response.text.replace("¤", "").split('\n')
+    run_function = functions_dictionary.get(intro[0])
     if run_function:
         run_function()
     else:
         print("error con eso pe")
 
+def numbers(itsafunction):
+    look = re.compile(r'\d')
+    return bool(look.search(itsafunction))
 
-def chatbot():
+def chatbot():  
     global response
+    global itsafunction
+    global the_function
     response = chat.send_message(question)
     print('\n')
-    if "¤" in response.text:
-        functions()
-        
-    print(f'Bot: {response.text}')
-    print('\n')
+    print(f'bot: {response.text}')
 
+    if "¤" in response.text:
+        itsafunction = response.text
+        if numbers(itsafunction):
+            op = response.text.split('\n')
+            second_op = op[0].split('x')
+            the_function = second_op[0]
+            second_op_fixed = second_op[1].replace('x', '')
+            int_number = int(second_op_fixed)
+            n = 0
+            while n <= int_number:
+                functions()
+                n += 1
+        else:
+            functions()
+            op = response.text.split('\n')
+            print(op[1])
+            print('\n')
+
+    else:
+        print(f'Bot: {response.text}')
+        print('\n')
+
+def startup():
+    chat.send_message(f'¤Data:volumen={sc.current_volume}%')
+
+startup()
 
 while True:
     question = input("You: ")
